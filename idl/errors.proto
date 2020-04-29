@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package models.errors;
+option go_package = "github.com/richard-xtek/go-grpc-micro-kit/grpc-gen/errors";
+
+enum ErrorDomain {
+    ZPI = 0;
+    ZALO = 1;
+    ZALOPAY = 2;
+}
+
+enum GeneralErrorCode {
+    SUCCESS = 0;
+    UNKNOWN = -1;
+    EXCEPTION = -2;
+    ZALOID_INVALID = -3;
+    OAUTH_INVALID = -4;
+    PIN_INVALID = -5;
+    HMAC_INVALID = -6;
+    APP_TRANSID_INVALID = -7;
+    AMOUNT_INVALID = -8;
+    OTP_INVALID = -9;
+    SEND_REQUEST_TO_ZALO_FAILED = -10;
+    SEND_REQUEST_TO_ZALOPAY_FAILED = -11;
+}
+
+message Error {
+    int32 code = 1;
+    string message = 2;
+    string domain = 3;
+}
