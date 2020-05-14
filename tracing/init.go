@@ -20,8 +20,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/richard-xtek/go-grpc-micro-kit/log"
 	opentracing "github.com/opentracing/opentracing-go"
+	"github.com/richard-xtek/go-grpc-micro-kit/log"
 	jaeger "github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
 	"github.com/uber/jaeger-client-go/rpcmetrics"
@@ -32,8 +32,11 @@ import (
 )
 
 // Init creates a new instance of Jaeger tracer.
-func Init(serviceName string, logger log.Factory, host string, options ...config.Option) opentracing.Tracer {
-	backendHostPort := "localhost:6831"
+func Init(serviceName string, logger log.Factory, backendHostPort string, options ...config.Option) opentracing.Tracer {
+	if backendHostPort == "" {
+		backendHostPort = "localhost:6831"
+	}
+
 	metricsFactory := prometheus.New().Namespace(metrics.NSOptions{Name: serviceName})
 
 	cfg := config.Configuration{

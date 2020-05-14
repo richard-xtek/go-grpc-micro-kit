@@ -20,6 +20,8 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cast v1.3.1
 	github.com/stretchr/testify v1.4.0
+	github.com/uber/jaeger-client-go v2.23.1+incompatible
+	github.com/uber/jaeger-lib v2.2.0+incompatible
 	github.com/wothing/wonaming v0.0.0-20180810082955-718c29fa5918
 	go.uber.org/zap v1.15.0
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
