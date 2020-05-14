@@ -17,6 +17,27 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
+// NewGrpcClientDialer ...
+func NewGrpcClientDialer(consulAddress string, tracer opentracing.Tracer, logger logf.Factory) *GRPCClientDialer {
+	return &GRPCClientDialer{
+		consulAddress: consulAddress,
+		tracer:        tracer,
+		logger:        logger,
+	}
+}
+
+// GRPCClientDialer ...
+type GRPCClientDialer struct {
+	consulAddress string
+	tracer        opentracing.Tracer
+	logger        logf.Factory
+}
+
+// ConnWithServiceName ...
+func (d *GRPCClientDialer) ConnWithServiceName(serviceName string, clientOpts ...ClientOption) (*grpc.ClientConn, error) {
+	return NewGrpcClientConsul(d.consulAddress, serviceName, d.tracer, d.logger, clientOpts...)
+}
+
 // NewGrpcClientConsul return new client connection
 // consulAddress - consul server
 // serviceName - service name register in consul
