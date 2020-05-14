@@ -5,6 +5,9 @@ import (
 	"net"
 	"time"
 
+	consul "github.com/hashicorp/consul/api"
+	lb "github.com/olivere/grpc/lb/consul"
+
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
@@ -12,36 +15,35 @@ import (
 	opentracing "github.com/opentracing/opentracing-go"
 	grpc_logf "github.com/richard-xtek/go-grpc-micro-kit/grpc-logf"
 	logf "github.com/richard-xtek/go-grpc-micro-kit/log"
-	wonaming "github.com/wothing/wonaming/consul"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )
 
 // NewGrpcClientDialer ...
-func NewGrpcClientDialer(consulAddress string, tracer opentracing.Tracer, logger logf.Factory) *GRPCClientDialer {
+func NewGrpcClientDialer(consul *consul.Client, tracer opentracing.Tracer, logger logf.Factory) *GRPCClientDialer {
 	return &GRPCClientDialer{
-		consulAddress: consulAddress,
-		tracer:        tracer,
-		logger:        logger,
+		consul: consul,
+		tracer: tracer,
+		logger: logger,
 	}
 }
 
 // GRPCClientDialer ...
 type GRPCClientDialer struct {
-	consulAddress string
-	tracer        opentracing.Tracer
-	logger        logf.Factory
+	consul *consul.Client
+	tracer opentracing.Tracer
+	logger logf.Factory
 }
 
 // ConnWithServiceName ...
 func (d *GRPCClientDialer) ConnWithServiceName(serviceName string, clientOpts ...ClientOption) (*grpc.ClientConn, error) {
-	return NewGrpcClientConsul(d.consulAddress, serviceName, d.tracer, d.logger, clientOpts...)
+	return NewGrpcClientConsul(d.consul, serviceName, d.tracer, d.logger, clientOpts...)
 }
 
 // NewGrpcClientConsul return new client connection
 // consulAddress - consul server
 // serviceName - service name register in consul
-func NewGrpcClientConsul(consulAddress string, serviceName string, tracer opentracing.Tracer, logger logf.Factory, clientOpts ...ClientOption) (*grpc.ClientConn, error) {
+func NewGrpcClientConsul(cc *consul.Client, serviceName string, tracer opentracing.Tracer, logger logf.Factory, clientOpts ...ClientOption) (*grpc.ClientConn, error) {
 	var opts []grpc.DialOption
 	var options clientOptions
 
@@ -92,12 +94,16 @@ func NewGrpcClientConsul(consulAddress string, serviceName string, tracer opentr
 	))
 
 	// consule
-	r := wonaming.NewResolver(serviceName)
+	r, err := lb.NewResolver(cc, serviceName, "")
+	if err != nil {
+		return nil, err
+	}
+
 	b := grpc.RoundRobin(r)
 
 	opts = append(opts, uIntOpt, grpc.WithInsecure(), grpc.WithBalancer(b))
 
-	conn, err := grpc.Dial(consulAddress, opts...)
+	conn, err := grpc.Dial(serviceName, opts...)
 
 	return conn, err
 }

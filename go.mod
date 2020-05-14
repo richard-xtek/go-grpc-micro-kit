@@ -6,12 +6,14 @@ require (
 	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/apache/thrift v0.13.0
 	github.com/garyburd/redigo v1.6.0
+	github.com/go-kit/kit v0.9.0
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/hashicorp/consul/api v1.4.0
 	github.com/jinzhu/gorm v1.9.12
+	github.com/olivere/grpc v1.0.0
 	github.com/opentracing/opentracing-go v1.1.0
 	github.com/prometheus/client_golang v1.6.0 // indirect
 	github.com/satori/go.uuid v1.2.0
