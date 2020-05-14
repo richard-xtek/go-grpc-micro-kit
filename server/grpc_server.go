@@ -112,7 +112,7 @@ func (s *GRPCServer) makeServer() {
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			grpc_opentracing.UnaryServerInterceptor(grpc_opentracing.WithTracer(s.tracer), grpc_opentracing.WithFilterFunc(func(ctx context.Context, fullMethodName string) bool {
 				s.logger.Bg().Info("Method in opentracing: " + fullMethodName)
-				if fullMethodName == "grpc.health.v1.Health/Check" {
+				if fullMethodName == "/grpc.health.v1.Health/Check" {
 					return false
 				}
 				return true
