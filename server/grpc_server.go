@@ -7,8 +7,8 @@ import (
 	"net"
 	"net/http"
 
-	grpc_logf "github.com/richard-xtek/go-grpc-micro-kit/grpc-logf"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	grpc_logf "github.com/richard-xtek/go-grpc-micro-kit/grpc-logf"
 	"go.uber.org/zap"
 
 	"github.com/richard-xtek/go-grpc-micro-kit/log"
@@ -110,7 +110,13 @@ func (s *GRPCServer) makeServer() {
 	uIntOpt := grpc.UnaryInterceptor(
 		grpc_middleware.ChainUnaryServer(
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
-			grpc_opentracing.UnaryServerInterceptor(grpc_opentracing.WithTracer(s.tracer)),
+			grpc_opentracing.UnaryServerInterceptor(grpc_opentracing.WithTracer(s.tracer), grpc_opentracing.WithFilterFunc(func(ctx context.Context, fullMethodName string) bool {
+				s.logger.Bg().Info("Method in opentracing: " + fullMethodName)
+				if fullMethodName == "grpc.health.v1.Health/Check" {
+					return false
+				}
+				return true
+			})),
 			grpc_prometheus.UnaryServerInterceptor,
 			grpc_logf.UnaryServerInterceptor(s.logger),
 			grpc_logf.PayloadUnaryServerInterceptor(s.logger, alwaysLoggingDeciderServer),

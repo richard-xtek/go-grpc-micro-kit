@@ -15,7 +15,7 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/olivere/grpc v1.0.0
 	github.com/opentracing/opentracing-go v1.1.0
-	github.com/prometheus/client_golang v1.6.0 // indirect
+	github.com/prometheus/client_golang v1.6.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cast v1.3.1
