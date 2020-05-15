@@ -11,6 +11,7 @@ require (
 	github.com/golang/protobuf v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
+	github.com/grpc-ecosystem/grpc-gateway v1.14.5
 	github.com/hashicorp/consul/api v1.4.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/olivere/grpc v1.0.0
@@ -26,6 +27,7 @@ require (
 	go.uber.org/zap v1.15.0
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
 	golang.org/x/text v0.3.2
+	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.29.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )

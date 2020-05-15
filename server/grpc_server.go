@@ -7,6 +7,8 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/richard-xtek/go-grpc-micro-kit/auth/requestinfo"
+
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	grpc_logf "github.com/richard-xtek/go-grpc-micro-kit/grpc-logf"
 	"go.uber.org/zap"
@@ -109,6 +111,7 @@ func (s *GRPCServer) makeServer() {
 
 	uIntOpt := grpc.UnaryInterceptor(
 		grpc_middleware.ChainUnaryServer(
+			requestinfo.UnaryServerAuth(requestinfo.Authentication(s.logger)),
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			grpc_opentracing.UnaryServerInterceptor(grpc_opentracing.WithTracer(s.tracer), grpc_opentracing.WithFilterFunc(func(ctx context.Context, fullMethodName string) bool {
 				if fullMethodName == "/grpc.health.v1.Health/Check" {
