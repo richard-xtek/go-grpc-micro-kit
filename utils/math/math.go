@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"strings"
 
-	converttype "xtek/exchange/user/base/utils/type"
+	converttype "github.com/richard-xtek/go-grpc-micro-kit/utils/datatype"
 )
 
 // Round ...
