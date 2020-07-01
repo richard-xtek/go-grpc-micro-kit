@@ -33,10 +33,11 @@ func Authentication(log log.Factory) AuthFunc {
 	return func(ctx context.Context, fullMethod string) (context.Context, error) {
 		md, _ := metadata.FromIncomingContext(ctx)
 		info := RequestInfo{
-			ClientIP:  getClientIP(md),
-			UserAgent: getClientUserAgent(md),
-			SessionID: getSessionID(md),
-			UserID:    getUserIDRequest(md),
+			ClientIP:              getClientIP(md),
+			UserAgent:             getClientUserAgent(md),
+			SessionID:             getSessionID(md),
+			UserID:                getUserIDRequest(md),
+			SessionIDForAuthorize: getSessionIDAuthorize(md),
 		}
 		newCtx := NewContext(ctx, &info)
 		return newCtx, nil

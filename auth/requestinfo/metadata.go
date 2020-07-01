@@ -15,6 +15,8 @@ const (
 	UserAgentKey = "grpcgateway-user-agent"
 	// UserIDRequestKey ...
 	UserIDRequestKey = "grpcgateway-user-id-request"
+	// SessionIDAuthorizeRequestKey ...
+	SessionIDAuthorizeRequestKey = "grpcgateway-session-id-authorize"
 )
 
 func getHeaderString(md metadata.MD, key string, defaultValue ...string) string {
@@ -39,6 +41,10 @@ func getClientIP(md metadata.MD) string {
 
 func getUserIDRequest(md metadata.MD) string {
 	return getHeaderString(md, UserIDRequestKey)
+}
+
+func getSessionIDAuthorize(md metadata.MD) string {
+	return getHeaderString(md, SessionIDAuthorizeRequestKey)
 }
 
 func getSessionID(md metadata.MD) string {
