@@ -3,6 +3,7 @@ module github.com/richard-xtek/go-grpc-micro-kit
 go 1.13
 
 require (
+	github.com/Shopify/sarama v1.26.4
 	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/apache/thrift v0.13.0
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535
@@ -15,9 +16,11 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.14.5
 	github.com/hashicorp/consul/api v1.4.0
+	github.com/hashicorp/go-multierror v1.0.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/olivere/grpc v1.0.0
 	github.com/opentracing/opentracing-go v1.1.0
+	github.com/pkg/errors v0.8.1
 	github.com/prometheus/client_golang v1.6.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
