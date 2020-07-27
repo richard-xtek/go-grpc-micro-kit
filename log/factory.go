@@ -61,7 +61,7 @@ func NewStandardFactory(logFolder, serviceName string) Factory {
 	encoderCfg := zap.NewProductionEncoderConfig()
 	encoderCfg.TimeKey = "ts"
 	encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
-	atomicLevel := zap.NewAtomicLevelAt(zap.InfoLevel)
+	atomicLevel := zap.NewAtomicLevelAt(zap.DebugLevel)
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoderCfg),
 		zapcore.AddSync(&lumberjack.Logger{
