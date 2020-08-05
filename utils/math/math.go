@@ -7,6 +7,8 @@ import (
 	"math/rand"
 	"strings"
 
+	"github.com/shopspring/decimal"
+
 	converttype "github.com/richard-xtek/go-grpc-micro-kit/utils/datatype"
 )
 
@@ -67,4 +69,20 @@ func GetMul() *big.Int {
 func MulQtyAndPricePoint(qty, pp *big.Int) *big.Int {
 	denominator := Exp(big.NewInt(10), big.NewInt(8))
 	return Div(Mul(qty, pp), denominator)
+}
+
+// FromDecimalString ...
+func FromDecimalString(str string) (*big.Int, error) {
+	dNum, err := decimal.NewFromString(str)
+	if err != nil {
+		return nil, err
+	}
+
+	return dNum.Mul(decimal.NewFromBigInt(big.NewInt(1), 8)).BigInt(), nil
+}
+
+// ToDecimalString ...
+func ToDecimalString(num *big.Int) string {
+	dNum := decimal.NewFromBigInt(num, -8)
+	return dNum.String()
 }
