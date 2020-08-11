@@ -111,7 +111,7 @@ func NormalizePassword(s string) (string, bool) {
 	hasUpper := false
 	hasLower := false
 	hasNumber := false
-	hasSpecial := false
+	// hasSpecial := false
 	hasSpace := true
 	for _, char := range s {
 		switch {
@@ -121,13 +121,13 @@ func NormalizePassword(s string) (string, bool) {
 			hasLower = true
 		case unicode.IsNumber(char):
 			hasNumber = true
-		case unicode.IsPunct(char) || unicode.IsSymbol(char):
-			hasSpecial = true
+		// case unicode.IsPunct(char) || unicode.IsSymbol(char):
+		// 	hasSpecial = truew
 		case unicode.IsSpace(char):
 			hasSpace = false
 		}
 	}
-	if hasUpper && hasLower && hasNumber && hasSpecial && hasSpace {
+	if hasUpper && hasLower && hasNumber && hasSpace {
 		return s, true
 	}
 	return "", false
