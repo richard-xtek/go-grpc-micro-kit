@@ -9,7 +9,7 @@ import (
 )
 
 // HystrixEnableFlag is a flag for enable/disable hystrix
-var HystrixEnableFlag = true
+var HystrixEnableFlag = false
 
 // UnaryClientInterceptor ...
 func UnaryClientInterceptor() grpc.UnaryClientInterceptor {
