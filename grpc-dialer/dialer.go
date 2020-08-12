@@ -3,20 +3,17 @@ package dialer
 import (
 	"context"
 	"net"
-	"time"
 
 	consul "github.com/hashicorp/consul/api"
 	lb "github.com/olivere/grpc/lb/consul"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	opentracing "github.com/opentracing/opentracing-go"
 	grpc_logf "github.com/richard-xtek/go-grpc-micro-kit/grpc-logf"
 	logf "github.com/richard-xtek/go-grpc-micro-kit/log"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 )
 
 // NewGrpcClientDialer ...
@@ -60,16 +57,16 @@ func NewGrpcClientConsul(cc *consul.Client, serviceName string, tracer opentraci
 
 	alwaysLoggingDeciderClient := func(ctx context.Context, fullMethodName string) bool { return true }
 
-	optsRetry := []grpc_retry.CallOption{
-		grpc_retry.WithBackoff(grpc_retry.BackoffExponential(50 * time.Millisecond)),
-		grpc_retry.WithCodes(codes.Unavailable),
-		grpc_retry.WithMax(3),
-		grpc_retry.WithPerRetryTimeout(3 * time.Second),
-	}
+	// optsRetry := []grpc_retry.CallOption{
+	// 	grpc_retry.WithBackoff(grpc_retry.BackoffExponential(50 * time.Millisecond)),
+	// 	grpc_retry.WithCodes(codes.Unavailable),
+	// 	grpc_retry.WithMax(3),
+	// 	grpc_retry.WithPerRetryTimeout(3 * time.Second),
+	// }
 
-	opts = append(opts,
-		grpc.WithDefaultCallOptions(grpc.FailFast(false)),
-	)
+	// opts = append(opts,
+	// 	grpc.WithDefaultCallOptions(grpc.FailFast(false)),
+	// )
 
 	sIntOpt := grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient(
 		StreamClientInterceptor(),
@@ -77,7 +74,7 @@ func NewGrpcClientConsul(cc *consul.Client, serviceName string, tracer opentraci
 		grpc_prometheus.StreamClientInterceptor,
 		grpc_logf.StreamClientInterceptor(logger),
 		grpc_logf.PayloadStreamClientInterceptor(logger, alwaysLoggingDeciderClient),
-		grpc_retry.StreamClientInterceptor(optsRetry...),
+		// grpc_retry.StreamClientInterceptor(optsRetry...),
 	))
 
 	opts = append(opts, sIntOpt)
@@ -90,7 +87,7 @@ func NewGrpcClientConsul(cc *consul.Client, serviceName string, tracer opentraci
 		grpc_prometheus.UnaryClientInterceptor,
 		grpc_logf.UnaryClientInterceptor(logger),
 		grpc_logf.PayloadUnaryClientInterceptor(logger, alwaysLoggingDeciderClient),
-		grpc_retry.UnaryClientInterceptor(optsRetry...),
+		// grpc_retry.UnaryClientInterceptor(optsRetry...),
 	))
 
 	// consule
