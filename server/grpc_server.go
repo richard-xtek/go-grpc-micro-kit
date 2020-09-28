@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"runtime/debug"
+
+	"github.com/richard-xtek/go-grpc-micro-kit/tracing"
 
 	"github.com/richard-xtek/go-grpc-micro-kit/auth/requestinfo"
 
@@ -96,6 +99,14 @@ func (s *GRPCServer) WithHandler(handler GRPCRegister) *GRPCServer {
 	return s
 }
 
+func (s *GRPCServer) recoveryHandler(ctx context.Context, p interface{}) error {
+	logger := grpc_logf.Extract(ctx)
+	logger.For(ctx).Error("Recovery catched", zap.String("p", fmt.Sprintf("%v", p)))
+	tracing.WriteLogGRPCMessage(ctx, true)
+	debug.PrintStack()
+	return grpc.Errorf(98888, "The system is busy, please try again later")
+}
+
 func (s *GRPCServer) makeServer() {
 	alwaysLoggingDeciderServer := func(ctx context.Context, fullMethodName string, servingObject interface{}) bool { return true }
 
@@ -122,7 +133,7 @@ func (s *GRPCServer) makeServer() {
 			grpc_prometheus.UnaryServerInterceptor,
 			grpc_logf.UnaryServerInterceptor(s.logger),
 			grpc_logf.PayloadUnaryServerInterceptor(s.logger, alwaysLoggingDeciderServer),
-			grpc_recovery.UnaryServerInterceptor(),
+			grpc_recovery.UnaryServerInterceptor(grpc_recovery.WithRecoveryHandlerContext(s.recoveryHandler)),
 			grpc_middleware.ChainUnaryServer(s.grpcUnaryInterceptors...),
 		),
 	)
