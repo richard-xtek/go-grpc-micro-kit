@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"runtime/debug"
 
 	"github.com/richard-xtek/go-grpc-micro-kit/kafka"
 
@@ -73,6 +74,7 @@ func ExecuteHandler(msg *kafka.Message, logger log.Factory) (err error) {
 			if !ok {
 				fmt.Printf("Error execute handler %v, message_uuid %s\n", errRecover, msg.UUID)
 			}
+			debug.PrintStack()
 		}
 	}()
 
